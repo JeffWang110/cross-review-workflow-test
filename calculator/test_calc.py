@@ -101,6 +101,25 @@ class TestParseExpression:
     def test_parse_invalid_format(self):
         with pytest.raises(InvalidInputError):
             parse_expression("+ 2")
+    
+    def test_negative_minus_positive(self):
+        """Test parsing negative number minus positive number.
+        
+        This tests the fix for the bug where '-5 - 3' could not be parsed.
+        The leading '-' should be treated as part of the negative number,
+        not as an operator.
+        """
+        left, op, right = parse_expression("-5 - 3")
+        assert left == -5
+        assert op == "-"
+        assert right == 3
+    
+    def test_negative_plus_positive(self):
+        """Test parsing negative number plus positive number."""
+        left, op, right = parse_expression("-5 + 3")
+        assert left == -5
+        assert op == "+"
+        assert right == 3
 
 
 class TestCalculate:

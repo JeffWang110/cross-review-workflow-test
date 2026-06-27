@@ -81,7 +81,13 @@ def parse_expression(expression: str) -> tuple[float, str, float]:
         if pos != -1:
             # Handle negative numbers at the start
             if op == '-' and pos == 0:
-                # Look for another '-' or other operator
+                # Skip the leading '-' but continue searching for other operators
+                # Including other '-' signs that appear later in the expression
+                next_pos = expression.find('-', pos + 1)
+                if next_pos != -1:
+                    if operator_pos == -1 or next_pos < operator_pos:
+                        operator = '-'
+                        operator_pos = next_pos
                 continue
             if operator_pos == -1 or pos < operator_pos:
                 operator = op
